@@ -8,5 +8,5 @@ lazy val root = (project in file("."))
   )
 
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.4.8"
-libraryDependencies += "org.vegas-viz" %% "vegas" % "0.3.11"
-libraryDependencies += "org.vegas-viz" %% "vegas-spark" % "0.3.11"
+libraryDependencies += "org.apache.spark" %% "spark-mllib" % "2.4.8"
+libraryDependencies += "com.johnsnowlabs.nlp" %% "spark-nlp-gpu" % "2.4.3"

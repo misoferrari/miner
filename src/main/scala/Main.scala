@@ -1,13 +1,20 @@
 import filters.RawVideoFilter
 import org.apache.spark.sql.SparkSession
-import processor.RawDataProcessor
+import processor.{ControversialProcessor, KMeansProcessor, NaturalLanguageProcessor, RawDataProcessor}
 import readers.CsvReader
 import translators.{CategoryTranslator, StringIntegerTranslator, TagTranslator}
 
 object Main {
   // Creating spark singleton.
   lazy val spark: SparkSession = {
-    val session = SparkSession.builder().appName("Miner").config("spark.master", "local").getOrCreate()
+    System.setProperty("hadoop.home.dir", "C:\\winutils")
+
+    val session = SparkSession
+      .builder()
+      .appName("Miner")
+      .config("spark.master", "local")
+      .getOrCreate()
+
     session.sparkContext.setLogLevel("OFF")
     session
   }
@@ -20,6 +27,14 @@ object Main {
     val processedVideoData = rawDataProcessor.process(dataFrame)
 
     println("====== Processed Data ======")
-    processedVideoData.show(20)
+    processedVideoData.show(1)
+
+    val sentimentResult = NaturalLanguageProcessor.process(processedVideoData)
+    sentimentResult.show(10)
+
+    val controversialResult = ControversialProcessor.process(sentimentResult)
+    controversialResult.show()
+
+    KMeansProcessor.process(controversialResult)
   }
 }
